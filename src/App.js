@@ -59,14 +59,13 @@ const App = () => {
     };
   }
 
-  const createRecording = ({ start, end }) => {
+  const createRecording = (data) => {
     const id = gensym();
     recordings[id] = {
+      ...data,
       stage: 'created',
-      start,
-      end,
-      startTimeout: setTimeout(startRecording(id), timeoutDuration(start)),
-      endTimeout: setTimeout(endRecording(id), timeoutDuration(start)),
+      startTimeout: setTimeout(startRecording(id), timeoutDuration(data.start)),
+      endTimeout: setTimeout(endRecording(id), timeoutDuration(data.end)),
     };
     return id;
   };
@@ -82,19 +81,24 @@ const App = () => {
         <header className="App-header">
           <h1>Watchr</h1>
         </header>
-        <body>
-          <div class="tagline">
-            <p id="tagline">Never miss a lecture or livestream again.</p>
+        <div className="tagline">
+          <p id="tagline">Never miss a lecture or livestream again.</p>
+        </div>
+        {/* <div class="steps">
+            <ol>
+            <li>Schedule a date and time to record at.</li>
+            <li>Pick a window or screen to record.</li>
+            <li>Confirm your scheduled recording.</li>
+            </ol>
+            </div> */}
+        <Form onSubmit={createRecording} />
+        {Object.entries(recordings).map(([id, recording]) => (
+          <div key={id}>
+            <p>{recording.filename}</p>
+            <p>{recording.start.toString()} to {recording.end.toString()}</p>
+            <p>{recording.type}</p>
           </div>
-          {/* <div class="steps">
-              <ol>
-              <li>Schedule a date and time to record at.</li>
-              <li>Pick a window or screen to record.</li>
-              <li>Confirm your scheduled recording.</li>
-              </ol>
-              </div> */}
-          <Form />
-        </body>
+        ))}
       </RecordingsContext.Provider>
     </div>
   );

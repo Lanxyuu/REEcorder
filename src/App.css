@@ -18,7 +18,7 @@ li {
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #494552;
   padding-top: 10px;
   padding-bottom: 10px;
   display: flex;
@@ -26,6 +26,18 @@ li {
   align-items: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.tagline {
+  background-color: #e8e8ec;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+#tagline {
+  margin: 0px;
+  font-style: italic;
 }
 
 .App-link {

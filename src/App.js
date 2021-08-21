@@ -15,7 +15,12 @@ const App = () => {
           <li>Pick a window or screen to record.</li>
           <li>Confirm your scheduled recording.</li>
         </ol>
-        <Card title="Select Time" />
+        <div style = {{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+          <Card title="Select Time" />
+          <Card title="Select Other Options" />
+          <Card title="Confirm" />
+        </div>
+        
       </body>
     </div>
   );

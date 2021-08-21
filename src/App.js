@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from "./components/Card/Card"
+import Form from './components/Form/Form'
 import './App.css';
 
 const gensym = (() => {
@@ -83,18 +83,13 @@ const App = () => {
           <h1>Watchr</h1>
         </header>
         <body>
-          <p>Wow Watchr is such a cool app</p>
+          <p>Never miss a lecture or livestream again.</p>
           <ol>
             <li>Schedule a date and time to record at.</li>
             <li>Pick a window or screen to record.</li>
             <li>Confirm your scheduled recording.</li>
           </ol>
-          <div style = {{width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
-            <Card title="Select Time" />
-            <Card title="Select Other Options" />
-            <Card title="Confirm" />
-          </div>
-          
+          <Form />
         </body>
       </RecordingsContext.Provider>
     </div>

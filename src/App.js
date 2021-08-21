@@ -1,7 +1,11 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 import './App.css';
 
-function App() {
+const App = () => {
+  const [startDate, setStartDate] = useState(new Date());
   return (
     <div className="App">
       <header className="App-header">
@@ -15,6 +19,7 @@ function App() {
           <li>Confirm your scheduled recording.</li>
         </ol>
       </body>
+      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
     </div>
   );
 }

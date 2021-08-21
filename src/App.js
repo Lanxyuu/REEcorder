@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
-import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
+import React from 'react';
+import Card from "./components/Card/Card"
 import './App.css';
 
 const App = () => {
-  const [startDate, setStartDate] = useState(new Date());
   return (
     <div className="App">
       <header className="App-header">
@@ -18,8 +15,8 @@ const App = () => {
           <li>Pick a window or screen to record.</li>
           <li>Confirm your scheduled recording.</li>
         </ol>
+        <Card title="Select Time" />
       </body>
-      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
     </div>
   );
 }

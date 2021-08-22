@@ -5,7 +5,7 @@ import 'reactjs-popup/dist/index.css';
 const History = (props) => {
     return (
         <Popup trigger={<button className="btn btn-outline-primary mb-3"> Recording History </button>} modal>
-            <div style={{ margin: '15px', overflowY: 'auto', height: '500px'}}>
+            <div style={{ margin: '15px', overflowY: 'auto', height: '500px' }}>
                 <h2>Recording History</h2>
                 {Object.entries(props.recordings).map(([id, recording]) => (
                     <div key={id} style={{ marginBottom: '8px', padding: '10px', borderStyle: 'solid', borderRadius: '5px', borderWidth: '1px' }}>

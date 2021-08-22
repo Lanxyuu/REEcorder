@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from './components/Form/Form'
 import History from './components/History/History'
 import './App.css';
 
 const electron = window.require("electron");
 
-let mediaRecorder; 
+let mediaRecorder;
+
+let word = '';
 const recordedChunks = [];
 
 const { desktopCapturer, remote } = electron;
@@ -36,8 +38,16 @@ const App = () => {
   const [videoText, changeText] = useState('');
   const [streamer, changeStream] = useState(null);
   const [location, changeLocation] = useState('');
+  const [fileNames, changeNames] = useState('ddd');
+
+
+  useEffect(() => {
+    console.log(fileNames);
+  })
+
 
   const getVideoSources = async () => {
+    console.log('dab');
     const inputSources = await desktopCapturer.getSources({
       types: ['window', 'screen']
     });
@@ -55,6 +65,7 @@ const App = () => {
 
   async function selectSource(source) {
     console.log('reached');
+    console.log(fileNames);
     changeText(source.name);
     console.log(videoText);
     const constraints = {
@@ -98,17 +109,11 @@ const App = () => {
     });
 
     const buffer = Buffer.from(await blob.arrayBuffer());
-
-    const filePath = location;
-
-    // const { filePath } = await dialog.showSaveDialog({
-    //   buttonLabel: 'Save video',
-    //   defaultPath: `vid-${Date.now()}.webm`
-    // });
-
-    if (filePath) {
-      writeFile(filePath, buffer, () => console.log('video saved successfully!'));
-    }
+    console.log(word);
+    writeFile(location + '\\' + word + '.webm', buffer, function (err) {
+      if (err) throw err;
+      console.log('Results Received');
+    });
 
   }
 
@@ -162,6 +167,9 @@ const App = () => {
 
   const createRecording = (data) => {
     const id = gensym();
+    console.log(data.filename);
+    changeNames(data.filename);
+    word = data.filename;
     setRecordings({
       ...recordings, [id]: {
         ...data,
@@ -170,6 +178,7 @@ const App = () => {
         endTimeout: setTimeout(endRecording(id), timeoutDuration(data.end)),
       }
     });
+    console.log(id);
     return id;
   };
 
@@ -181,16 +190,21 @@ const App = () => {
   }
 
   const onDo = e => {
-  dialog.showOpenDialog({
-    properties: ['openFile', 'openDirectory']
-  }).then(result => {
-    console.log(result.canceled)
-    console.log(result.filePaths)
-    changeLocation(result.filePaths[0]);
-  }).catch(err => {
-    console.log(err)
-  });
-}
+    dialog.showOpenDialog({
+      properties: ['openFile', 'openDirectory']
+    }).then(result => {
+      console.log(result.canceled)
+      console.log(result.filePaths)
+      changeLocation(result.filePaths[0]);
+      console.log(location);
+      // writeFile(__dirname + './Users/ayqc7/Desktop/Summer/Filament/dumps/result.txt', 'This is my text', function (err) {
+      //   if (err) throw err;
+      //   console.log('Results Received');
+      // });
+    }).catch(err => {
+      console.log(err)
+    });
+  }
 
 
   return (
@@ -202,15 +216,15 @@ const App = () => {
         <p id="tagline">Never miss a lecture or livestream again.</p>
       </div>
 
-      <Form onSubmit={createRecording} buttonText = {videoText} getSources = {getVideoSources} chooseDirectory = {onDo} directory = {location} />
+      <Form onSubmit={createRecording} buttonText={videoText} getSources={getVideoSources} chooseDirectory={onDo} directory={location} />
 
       {console.log({ recordings })}
-
+      {/* 
       <div>
         <History recordings={recordings} deleteRecording={deleteRecording} />
-      </div>
+      </div> */}
       <div>
-        <h2 class="mt-2">Recording Preview</h2>
+        <h2 className="mt-2">Recording Preview</h2>
         <Video autoPlay srcObject={streamer} width="80%" class="mb-5" />
       </div>
     </div>

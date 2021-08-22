@@ -10,6 +10,8 @@ const Form = ({ onSubmit, buttonText, getSources, chooseDirectory, directory }) 
         console.log("abc");
         const newData = { filename: filename, start: value[0], end: value[1] };
         onSubmit(newData);
+        onChange([new Date(), new Date()]);
+        setFilename("");
     }
 
     return (

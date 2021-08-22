@@ -169,18 +169,20 @@ const App = () => {
 
   const createRecording = (data) => {
     const id = gensym();
-    setRecordings({...recordings, [id]: {
-      ...data,
-      stage: 'created',
-      startTimeout: setTimeout(startRecording(id), timeoutDuration(data.start)),
-      endTimeout: setTimeout(endRecording(id), timeoutDuration(data.end)),
-    }});
+    setRecordings({
+      ...recordings, [id]: {
+        ...data,
+        stage: 'created',
+        startTimeout: setTimeout(startRecording(id), timeoutDuration(data.start)),
+        endTimeout: setTimeout(endRecording(id), timeoutDuration(data.end)),
+      }
+    });
     return id;
   };
 
   const deleteRecording = (id) => {
     interruptRecording(id);
-    const newObject = {...recordings};
+    const newObject = { ...recordings };
     delete newObject[id];
     setRecordings(newObject);
   }
@@ -194,7 +196,7 @@ const App = () => {
         <p id="tagline">Never miss a lecture or livestream again.</p>
       </div>
 
-      <Form onSubmit={createRecording} buttonText = {videoText} getSources = {getVideoSources}/>
+      <Form onSubmit={createRecording} buttonText={videoText} getSources={getVideoSources} />
 
       {console.log({ recordings })}
 
@@ -206,8 +208,10 @@ const App = () => {
           <button onClick={() => deleteRecording(id)}>Remove recording</button>
         </div>
       ))}
-
-      <Video autoPlay srcObject = {streamer} />
+      <div>
+        <History recordings={recordings} />
+      </div>
+      <Video autoPlay srcObject={streamer} />
     </div>
   );
 }

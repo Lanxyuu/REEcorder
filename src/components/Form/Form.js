@@ -3,7 +3,7 @@ import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import { useForm } from "react-hook-form";
 import "./Form.css";
 
-const Form = ({ onSubmit, buttonText, getSources }) => {
+const Form = ({ onSubmit, buttonText, getSources, chooseDirectory, directory }) => {
   const [value, onChange] = useState([new Date(), new Date()]);
   const { register, handleSubmit } = useForm();
 
@@ -25,9 +25,16 @@ const Form = ({ onSubmit, buttonText, getSources }) => {
           const newData = { ...data, start: value[0], end: value[1] };
           onSubmit(newData);
         })}>
-          <input className="formInput" type="text" placeholder="File Name" {...register("filename", { required: true })} /><br />
-          <button className="btn btn-outline-secondary formInput" {...register("path")}>Choose folder</button><br />
-          <button className="btn btn-outline-secondary formInput" onClick={() => getSources()}>
+          <input type="text" placeholder="File Name" {...register("filename", { required: true })} /><br />
+
+
+          {/* <button className="btn btn-outline-secondary" {...register("path")}>Choose folder</button> */}
+          <button placeholder="Choose File Directory" onClick = {chooseDirectory}>
+            {!directory || directory.length === 0 ? 'Choose File Directory' : directory}
+          </button>
+          
+          <br />
+          <button id="videoSelectBtn" className="button is-text" onClick={() => getSources()}>
             {buttonText.length === 0 ? 'Choose a Video Source' : buttonText}
           </button>
           <br />

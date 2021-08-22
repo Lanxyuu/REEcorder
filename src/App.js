@@ -35,6 +35,7 @@ const App = () => {
 
   const [videoText, changeText] = useState('');
   const [streamer, changeStream] = useState(null);
+  const [location, changeLocation] = useState('');
 
   const getVideoSources = async () => {
     const inputSources = await desktopCapturer.getSources({
@@ -108,10 +109,12 @@ const App = () => {
 
     const buffer = Buffer.from(await blob.arrayBuffer());
 
-    const { filePath } = await dialog.showSaveDialog({
-      buttonLabel: 'Save video',
-      defaultPath: `vid-${Date.now()}.webm`
-    });
+    const filePath = location;
+
+    // const { filePath } = await dialog.showSaveDialog({
+    //   buttonLabel: 'Save video',
+    //   defaultPath: `vid-${Date.now()}.webm`
+    // });
 
     if (filePath) {
       writeFile(filePath, buffer, () => console.log('video saved successfully!'));
@@ -187,6 +190,19 @@ const App = () => {
     setRecordings(newObject);
   }
 
+  const onDo = e => {
+    dialog.showOpenDialog({
+      properties: ['openFile', 'openDirectory']
+    }).then(result => {
+      console.log(result.canceled)
+      console.log(result.filePaths)
+      changeLocation(result.filePaths[0]);
+    }).catch(err => {
+      console.log(err)
+    });
+  }
+
+
   return (
     <div className="App">
       <header className="App-header">
@@ -196,7 +212,7 @@ const App = () => {
         <p id="tagline">Never miss a lecture or livestream again.</p>
       </div>
 
-      <Form onSubmit={createRecording} buttonText={videoText} getSources={getVideoSources} />
+      <Form onSubmit={createRecording} buttonText={videoText} getSources={getVideoSources} chooseDirectory={onDo} directory={location} />
 
       {console.log({ recordings })}
 
@@ -204,15 +220,43 @@ const App = () => {
         <div key={id}>
           <p>{recording.filename}</p>
           <p>{recording.start.toString()} to {recording.end.toString()}</p>
-          <p>{recording.type}</p>
           <button onClick={() => deleteRecording(id)}>Remove recording</button>
         </div>
-      ))}
-      <div>
-        <History recordings={recordings} />
-      </div>
-      <Video autoPlay srcObject={streamer} />
-    </div>
+        {/* <div class="steps">
+            <ol>
+            <li>Schedule a date and time to record at.</li>
+            <li>Pick a window or screen to record.</li>
+            <li>Confirm your scheduled recording.</li>
+            </ol>
+            </div> */}
+        < Form onSubmit = { createRecording } buttonText = { videoText } getSources = { getVideoSources } />
+        {
+          Object.entries(recordings).map(([id, recording]) => (
+            <div key={id}>
+              <p>{recording.filename}</p>
+              <p>{recording.start.toString()} to {recording.end.toString()}</p>
+              <p>{recording.type}</p>
+            </div>
+          ))
+        }
+        < History recordings = { recordings } />
+
+        {/* <video autoPlay>
+          {/* <source src={streamer}></source> 
+
+        </video> */}
+
+        < Video autoPlay srcObject = { streamer } />
+
+        {/* <button id="startBtn" className="button is-primary" onClick={() => startRec()}>Start</button>
+        <button id="stopBtn" className="button is-warning" onClick={() => stopRec()}>Stop</button>
+        <button id="videoSelectBtn" className="button is-text" onClick={() => getVideoSources()}>
+          {videoText.length === 0 ? 'Choose a Video Source' : videoText}
+        </button> */}
+
+
+      </RecordingsContext.Provider>
+    </div >
   );
 }
 

@@ -5,7 +5,7 @@ import './App.css';
 
 const electron = window.require("electron");
 
-let mediaRecorder; // MediaRecorder instance to capture footage
+let mediaRecorder; 
 const recordedChunks = [];
 
 const { desktopCapturer, remote } = electron;
@@ -53,7 +53,6 @@ const App = () => {
     videoOptionsMenu.popup();
   }
 
-  // Change the videoSource window to record
   async function selectSource(source) {
     console.log('reached');
     changeText(source.name);
@@ -74,34 +73,25 @@ const App = () => {
       }
     };
 
-    // Create a Stream
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
-
-    // Preview the source in a video element
     // currentStream = stream;
     changeStream(stream);
 
     // videoElement.srcObject = stream;
     // videoElement.play();
-
-    // Create the Media Recorder
     const options = { mimeType: 'video/webm; codecs=vp9' };
     mediaRecorder = new MediaRecorder(stream, options);
 
-    // Register Event Handlers
     mediaRecorder.ondataavailable = handleDataAvailable;
     mediaRecorder.onstop = handleStop;
 
-    // Updates the UI
   }
 
-  // Captures all recorded chunks
   function handleDataAvailable(e) {
     console.log('video data available');
     recordedChunks.push(e.data);
   }
 
-  // Saves the video file on stop
   async function handleStop(e) {
     const blob = new Blob(recordedChunks, {
       type: 'video/webm; codecs=vp9'

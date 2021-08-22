@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import { useForm } from "react-hook-form";
-import "./Form.css"
+import "./Form.css";
 
 const Form = ({ onSubmit, buttonText, getSources }) => {
     const [value, onChange] = useState([new Date(), new Date()]);
@@ -26,11 +26,7 @@ const Form = ({ onSubmit, buttonText, getSources }) => {
                 })}>
                     <input id="form" type="text" placeholder="File Name" {...register("filename", { required: true })} /><br />
                     <button class="btn btn-outline-secondary" id="form" {...register("path")}>Choose folder</button><br />
-                    {/* <select id="form" name="type"  {...register("type", { required: true })}>
-                        <option value="Window">Window</option>
-                        <option value="Screen">Screen</option>
-                    </select> */}
-                    <button id="videoSelectBtn" className="button is-text" onClick={() => getSources()}>
+                    <button id="videoSelectBtn" className="button is-text" onClick={getSources}>
                       {buttonText.length === 0 ? 'Choose a Video Source' : buttonText}
                     </button>
                     <br />

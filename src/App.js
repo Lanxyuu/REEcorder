@@ -194,7 +194,7 @@ const App = () => {
         <p id="tagline">Never miss a lecture or livestream again.</p>
       </div>
 
-      <Form onSubmit={createRecording} />
+      <Form onSubmit={createRecording} buttonText = {videoText} getSources = {getVideoSources}/>
 
       {console.log({ recordings })}
 

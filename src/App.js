@@ -3,13 +3,13 @@ import Form from './components/Form/Form'
 import './App.css';
 
 const gensym = (() => {
-    let n = 0;
-    return () => `g${n++}`;
+  let n = 0;
+  return () => `g${n++}`;
 })();
 
 const RecordingsContext = React.createContext({
   recordings: {},
-  setRecordings: () => {},
+  setRecordings: () => { },
 });
 
 const App = () => {
@@ -30,13 +30,13 @@ const App = () => {
   };
 
   const startRecording = (id) => () => {
-    setRecordings({...recordings, [id]: {...recordings[id], stage: 'started'}});
+    setRecordings({ ...recordings, [id]: { ...recordings[id], stage: 'started' } });
     console.log('start', id);
     startCapture();
   };
 
   const endRecording = (id) => () => {
-    setRecordings({...recordings, [id]: {...recordings[id], stage: 'ended'}});
+    setRecordings({ ...recordings, [id]: { ...recordings[id], stage: 'ended' } });
     console.log('end', id);
     stopCapture();
   };
@@ -72,7 +72,7 @@ const App = () => {
 
   const deleteRecording = (id) => {
     interruptRecording(id);
-    setRecordings({...recordings, [id]: undefined});
+    setRecordings({ ...recordings, [id]: undefined });
   }
 
   return (
@@ -100,7 +100,7 @@ const App = () => {
           </div>
         ))}
       </RecordingsContext.Provider>
-    </div>
+    </div >
   );
 }
 

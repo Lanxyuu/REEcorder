@@ -8,7 +8,7 @@ const Form = ({ onSubmit, buttonText, getSources, chooseDirectory, directory }) 
 
     const handleSubmit = () => {
         console.log("abc");
-        const newData = { name: filename[0], start: value[0], end: value[1] };
+        const newData = { filename: filename, start: value[0], end: value[1] };
         onSubmit(newData);
     }
 
@@ -16,7 +16,7 @@ const Form = ({ onSubmit, buttonText, getSources, chooseDirectory, directory }) 
         <div style={{
             width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '10px 0'
         }}>
-            <div className="mb-4" style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
+            <div className="mb-3" style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <h2>Select Time</h2>
                 <DateTimeRangePicker
                     value={value}

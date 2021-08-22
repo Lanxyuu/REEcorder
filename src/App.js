@@ -200,18 +200,13 @@ const App = () => {
 
       {console.log({ recordings })}
 
-      {Object.entries(recordings).map(([id, recording]) => (
-        <div key={id}>
-          <p>{recording.filename}</p>
-          <p>{recording.start.toString()} to {recording.end.toString()}</p>
-          <p>{recording.type}</p>
-          <button onClick={() => deleteRecording(id)}>Remove recording</button>
-        </div>
-      ))}
       <div>
-        <History recordings={recordings} />
+        <History recordings={recordings} deleteRecording={deleteRecording} />
       </div>
-      <Video autoPlay srcObject={streamer} />
+      <div>
+        <h2 class="mt-2">Recording Preview</h2>
+        <Video autoPlay srcObject={streamer} width="80%" class="mb-5" />
+      </div>
     </div>
   );
 }

@@ -4,14 +4,14 @@ import 'reactjs-popup/dist/index.css';
 
 const History = (props) => {
     return (
-        <Popup trigger={<button className="btn btn-outline-primary"> Recording History </button>} modal>
-            <div>
+        <Popup trigger={<button className="btn btn-outline-primary mb-3"> Recording History </button>} modal>
+            <div style={{ margin: '15px' }}>
                 <h2>Recording History</h2>
                 {Object.entries(props.recordings).map(([id, recording]) => (
-                    <div key={id}>
-                        <p>File: {recording.filename}</p>
+                    <div key={id} style={{ marginBottom: '8px', padding: '10px', borderStyle: 'solid', borderRadius: '5px', borderWidth: '1px' }}>
+                        <p>Filename: {recording.filename}</p>
                         <p>Time: {recording.start.toString()} to {recording.end.toString()}</p>
-                        <p>Source: {recording.type}</p>
+                        <button className="btn btn-outline-secondary" onClick={() => props.deleteRecording(id)}>Remove recording</button>
                     </div>
                 ))}
             </div>

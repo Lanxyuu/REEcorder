@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Form from './components/Form/Form'
+import History from './components/History/History'
 import './App.css';
 
 const electron = window.require("electron");
@@ -7,7 +8,7 @@ const electron = window.require("electron");
 let mediaRecorder; // MediaRecorder instance to capture footage
 const recordedChunks = [];
 
-const { desktopCapturer, remote } = electron; 
+const { desktopCapturer, remote } = electron;
 
 const { writeFile } = window.require('fs');
 
@@ -137,13 +138,13 @@ const App = () => {
   };
 
   const startRecording = (id) => () => {
-    setRecordings({...recordings, [id]: {...recordings[id], stage: 'started'}});
+    setRecordings({ ...recordings, [id]: { ...recordings[id], stage: 'started' } });
     console.log('start', id);
     startCapture();
   };
 
   const endRecording = (id) => () => {
-    setRecordings({...recordings, [id]: {...recordings[id], stage: 'ended'}});
+    setRecordings({ ...recordings, [id]: { ...recordings[id], stage: 'ended' } });
     console.log('end', id);
     stopCapture();
   };

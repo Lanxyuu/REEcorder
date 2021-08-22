@@ -8,11 +8,13 @@ const History = (props) => {
             <div style={{ margin: '15px', overflowY: 'auto', height: '500px' }}>
                 <h2>Recording History</h2>
                 {Object.entries(props.recordings).map(([id, recording]) => (
+                    recording && recording.start && recording.end &&
                     <div key={id} style={{ marginBottom: '8px', padding: '10px', borderStyle: 'solid', borderRadius: '5px', borderWidth: '1px' }}>
                         <p>Filename: {recording.filename}</p>
                         <p>Time: {recording.start.toString()} to {recording.end.toString()}</p>
                         <button className="btn btn-outline-secondary" onClick={() => props.deleteRecording(id)}>Remove recording</button>
                     </div>
+
                 ))}
             </div>
         </Popup >

@@ -208,12 +208,6 @@ const App = () => {
       ))}
 
       <Video autoPlay srcObject = {streamer} />
-
-      <button id="startBtn" className="button is-primary" onClick = {startCapture}>Start</button>
-      <button id="stopBtn" className="button is-warning"  onClick = {stopCapture}>Stop</button>
-      <button id="videoSelectBtn" className="button is-text" onClick = {() => getVideoSources()}>
-        {videoText.length === 0 ? 'Choose a Video Source' :  videoText}
-      </button>
     </div>
   );
 }

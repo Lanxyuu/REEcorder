@@ -221,7 +221,7 @@ const App = () => {
             <li>Confirm your scheduled recording.</li>
             </ol>
             </div> */}
-        <Form onSubmit={createRecording} />
+        <Form onSubmit={createRecording} buttonText = {videoText} getSources = {getVideoSources}/>
         {Object.entries(recordings).map(([id, recording]) => (
           <div key={id}>
             <p>{recording.filename}</p>
@@ -235,13 +235,13 @@ const App = () => {
 
         </video> */}
 
-        <Video autoPlay srcObject={streamer} />
+        <Video style = {{ width: '600px' }} autoPlay srcObject={streamer} />
 
-        <button id="startBtn" className="button is-primary" onClick={() => startRec()}>Start</button>
+        {/* <button id="startBtn" className="button is-primary" onClick={() => startRec()}>Start</button>
         <button id="stopBtn" className="button is-warning" onClick={() => stopRec()}>Stop</button>
         <button id="videoSelectBtn" className="button is-text" onClick={() => getVideoSources()}>
           {videoText.length === 0 ? 'Choose a Video Source' : videoText}
-        </button>
+        </button> */}
 
 
       </RecordingsContext.Provider>

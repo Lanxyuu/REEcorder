@@ -3,13 +3,13 @@ import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
 import { useForm } from "react-hook-form";
 import "./Form.css"
 
-const Form = ({ onSubmit }) => {
+const Form = ({ onSubmit, buttonText, getSources }) => {
     const [value, onChange] = useState([new Date(), new Date()]);
     const { register, handleSubmit } = useForm();
 
     return (
         <div style={{
-            width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px'
+            width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '10px 0'
         }}>
             <div class="mb-4" style={{ width: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <h2>Select Time</h2>
@@ -26,10 +26,14 @@ const Form = ({ onSubmit }) => {
                 })}>
                     <input id="form" type="text" placeholder="File Name" {...register("filename", { required: true })} /><br />
                     <button class="btn btn-outline-secondary" id="form" {...register("path")}>Choose folder</button><br />
-                    <select id="form" name="type"  {...register("type", { required: true })}>
+                    {/* <select id="form" name="type"  {...register("type", { required: true })}>
                         <option value="Window">Window</option>
                         <option value="Screen">Screen</option>
-                    </select><br />
+                    </select> */}
+                    <button id="videoSelectBtn" className="button is-text" onClick={() => getSources()}>
+                      {buttonText.length === 0 ? 'Choose a Video Source' : buttonText}
+                    </button>
+                    <br />
                     <input class="btn btn-outline-dark" id="form" type="submit" value="Confirm" />
                 </form>
             </div>

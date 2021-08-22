@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
 import DateTimeRangePicker from '@wojtekmaj/react-datetimerange-picker';
-import { useForm } from "react-hook-form";
 import "./Form.css";
 
 const Form = ({ onSubmit, buttonText, getSources, chooseDirectory, directory }) => {
   const [value, onChange] = useState([new Date(), new Date()]);
-  const { register, handleSubmit } = useForm();
+  const [filename, setFilename] = useState("");
+
+  const handleSubmit = () => {
+    console.log("abc");
+    const newData = { name: filename[0], start: value[0], end: value[1] };
+    onSubmit(newData);
+  }
 
   return (
     <div style={{
@@ -20,26 +25,14 @@ const Form = ({ onSubmit, buttonText, getSources, chooseDirectory, directory }) 
       </div>
       <div style={{ width: '60%' }} >
         <h2>Select Options</h2>
-        <form onSubmit={handleSubmit((data) => {
-          console.log("abc");
-          const newData = { ...data, start: value[0], end: value[1] };
-          onSubmit(newData);
-        })}>
-          <input type="text" placeholder="File Name" {...register("filename", { required: true })} /><br />
-
-
-          {/* <button className="btn btn-outline-secondary" {...register("path")}>Choose folder</button> */}
-          <button placeholder="Choose File Directory" onClick = {chooseDirectory}>
-            {!directory || directory.length === 0 ? 'Choose File Directory' : directory}
-          </button>
-          
-          <br />
-          <button id="videoSelectBtn" className="button is-text" onClick={() => getSources()}>
-            {buttonText.length === 0 ? 'Choose a Video Source' : buttonText}
-          </button>
-          <br />
-          <input className="btn btn-outline-primary formInput" type="submit" value="Confirm" />
-        </form>
+        <input className="formInput" type="text" placeholder="File Name" required value={filename} onChange={(e) => setFilename(e.target.value)} />
+        <button className="btn btn-outline-secondary formInput" placeholder="Choose File Directory" onClick={chooseDirectory}>
+          {!directory || directory.length === 0 ? 'Choose File Directory' : directory}
+        </button>
+        <button className="btn btn-outline-secondary formInput" onClick={() => getSources()}>
+          {buttonText.length === 0 ? 'Choose a Video Source' : buttonText}
+        </button>
+        <input className="btn btn-outline-primary formInput" type="submit" value="Confirm" onClick={handleSubmit} />
       </div>
     </div >
   );

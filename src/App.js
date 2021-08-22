@@ -26,128 +26,108 @@ export const Video = ({ srcObject, ...props }) => {
 };
 
 const gensym = (() => {
-    let n = 0;
-    return () => `g${n++}`;
+  let n = 0;
+  return () => `g${n++}`;
 })();
-
-const RecordingsContext = React.createContext({
-  recordings: {},
-  setRecordings: () => {},
-});
 
 const App = () => {
 
   const [videoText, changeText] = useState('');
   const [streamer, changeStream] = useState(null);
 
-const startRec = () => {
-  console.log('dab');
-  mediaRecorder.start();
-  console.log('started');
-}
+  const getVideoSources = async () => {
+    const inputSources = await desktopCapturer.getSources({
+      types: ['window', 'screen']
+    });
 
-const stopRec = () => {
-  console.log('dab');
-  mediaRecorder.stop();
-  console.log('stopped');
-}
-
-const getVideoSources = async () => {
-  const inputSources = await desktopCapturer.getSources({
-    types: ['window', 'screen']
-  });
-
-  const videoOptionsMenu = Menu.buildFromTemplate(
-    inputSources.map(source => {
-      return {
-        label: source.name,
-        click: () => selectSource(source)
-      };
-    })
-  );
-  videoOptionsMenu.popup();
-}
-
-// Change the videoSource window to record
-async function selectSource(source) {
-  console.log('reached');
-  changeText(source.name);
-  
-  console.log(videoText);
-
-  const constraints = {
-    audio: false,
-    // {
-    //   mandatory: {
-    //     chromeMediaSource: 'desktop',
-    //     chromeMediaSourceId: source.id
-    //   }
-    // },
-    video: {
-      mandatory: {
-        chromeMediaSource: 'desktop',
-        chromeMediaSourceId: source.id
-      }
-    }
-  };
-
-  // Create a Stream
-  const stream = await navigator.mediaDevices
-    .getUserMedia(constraints);
-
-  // Preview the source in a video element
-  // currentStream = stream;
-  changeStream(stream);
-
-  // videoElement.srcObject = stream;
-  // videoElement.play();
-
-  // Create the Media Recorder
-  const options = { mimeType: 'video/webm; codecs=vp9' };
-  mediaRecorder = new MediaRecorder(stream, options);
-
-  // Register Event Handlers
-  mediaRecorder.ondataavailable = handleDataAvailable;
-  mediaRecorder.onstop = handleStop;
-
-  // Updates the UI
-}
-
-// Captures all recorded chunks
-function handleDataAvailable(e) {
-  console.log('video data available');
-  recordedChunks.push(e.data);
-}
-
-// Saves the video file on stop
-async function handleStop(e) {
-  const blob = new Blob(recordedChunks, {
-    type: 'video/webm; codecs=vp9'
-  });
-
-  const buffer = Buffer.from(await blob.arrayBuffer());
-
-  const { filePath } = await dialog.showSaveDialog({
-    buttonLabel: 'Save video',
-    defaultPath: `vid-${Date.now()}.webm`
-  });
-
-  if (filePath) {
-    writeFile(filePath, buffer, () => console.log('video saved successfully!'));
+    const videoOptionsMenu = Menu.buildFromTemplate(
+      inputSources.map(source => {
+        return {
+          label: source.name,
+          click: () => selectSource(source)
+        };
+      })
+    );
+    videoOptionsMenu.popup();
   }
 
-}
+  // Change the videoSource window to record
+  async function selectSource(source) {
+    console.log('reached');
+    changeText(source.name);
+    console.log(videoText);
+    const constraints = {
+      audio: false,
+      // {
+      //   mandatory: {
+      //     chromeMediaSource: 'desktop',
+      //     chromeMediaSourceId: source.id
+      //   }
+      // },
+      video: {
+        mandatory: {
+          chromeMediaSource: 'desktop',
+          chromeMediaSourceId: source.id
+        }
+      }
+    };
+
+    // Create a Stream
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+
+    // Preview the source in a video element
+    // currentStream = stream;
+    changeStream(stream);
+
+    // videoElement.srcObject = stream;
+    // videoElement.play();
+
+    // Create the Media Recorder
+    const options = { mimeType: 'video/webm; codecs=vp9' };
+    mediaRecorder = new MediaRecorder(stream, options);
+
+    // Register Event Handlers
+    mediaRecorder.ondataavailable = handleDataAvailable;
+    mediaRecorder.onstop = handleStop;
+
+    // Updates the UI
+  }
+
+  // Captures all recorded chunks
+  function handleDataAvailable(e) {
+    console.log('video data available');
+    recordedChunks.push(e.data);
+  }
+
+  // Saves the video file on stop
+  async function handleStop(e) {
+    const blob = new Blob(recordedChunks, {
+      type: 'video/webm; codecs=vp9'
+    });
+
+    const buffer = Buffer.from(await blob.arrayBuffer());
+
+    const { filePath } = await dialog.showSaveDialog({
+      buttonLabel: 'Save video',
+      defaultPath: `vid-${Date.now()}.webm`
+    });
+
+    if (filePath) {
+      writeFile(filePath, buffer, () => console.log('video saved successfully!'));
+    }
+
+  }
 
   const [recordings, setRecordings] = React.useState({});
 
   const startCapture = () => {
     console.log('Started capture');
-    startRec();
+    mediaRecorder.start();
   };
 
   const stopCapture = () => {
     console.log('Stopped capture');
-    stopRec();
+    mediaRecorder.stop();
   };
 
   const timeoutDuration = (start, now) => {
@@ -188,62 +168,51 @@ async function handleStop(e) {
 
   const createRecording = (data) => {
     const id = gensym();
-    recordings[id] = {
+    setRecordings({...recordings, [id]: {
       ...data,
       stage: 'created',
       startTimeout: setTimeout(startRecording(id), timeoutDuration(data.start)),
       endTimeout: setTimeout(endRecording(id), timeoutDuration(data.end)),
-    };
+    }});
     return id;
   };
 
   const deleteRecording = (id) => {
     interruptRecording(id);
-    setRecordings({...recordings, [id]: undefined});
+    const newObject = {...recordings};
+    delete newObject[id];
+    setRecordings(newObject);
   }
-
-
 
   return (
     <div className="App">
-      <RecordingsContext.Provider value={{ recordings, createRecording, deleteRecording }}>
-        <header className="App-header">
-          <h1>Watchr</h1>
-        </header>
-        <div className="tagline">
-          <p id="tagline">Never miss a lecture or livestream again.</p>
+      <header className="App-header">
+        <h1>Watchr</h1>
+      </header>
+      <div className="tagline">
+        <p id="tagline">Never miss a lecture or livestream again.</p>
+      </div>
+
+      <Form onSubmit={createRecording} />
+
+      {console.log({ recordings })}
+
+      {Object.entries(recordings).map(([id, recording]) => (
+        <div key={id}>
+          <p>{recording.filename}</p>
+          <p>{recording.start.toString()} to {recording.end.toString()}</p>
+          <p>{recording.type}</p>
+          <button onClick={() => deleteRecording(id)}>Remove recording</button>
         </div>
-        {/* <div class="steps">
-            <ol>
-            <li>Schedule a date and time to record at.</li>
-            <li>Pick a window or screen to record.</li>
-            <li>Confirm your scheduled recording.</li>
-            </ol>
-            </div> */}
-        <Form onSubmit={createRecording} />
-        {Object.entries(recordings).map(([id, recording]) => (
-          <div key={id}>
-            <p>{recording.filename}</p>
-            <p>{recording.start.toString()} to {recording.end.toString()}</p>
-            <p>{recording.type}</p>
-          </div>
-        ))}
+      ))}
 
-        {/* <video autoPlay>
-          {/* <source src={streamer}></source> 
+      <Video autoPlay srcObject = {streamer} />
 
-        </video> */}
-
-        <Video autoPlay srcObject = {streamer} />
-
-        <button id="startBtn" className="button is-primary" onClick = {() => startRec()}>Start</button>
-        <button id="stopBtn" className="button is-warning"  onClick = {() => stopRec()}>Stop</button>
-        <button id="videoSelectBtn" className="button is-text" onClick = {() => getVideoSources()}>
-          {videoText.length === 0 ? 'Choose a Video Source' :  videoText}
-        </button>
-
-
-      </RecordingsContext.Provider>
+      <button id="startBtn" className="button is-primary" onClick = {startCapture}>Start</button>
+      <button id="stopBtn" className="button is-warning"  onClick = {stopCapture}>Stop</button>
+      <button id="videoSelectBtn" className="button is-text" onClick = {() => getVideoSources()}>
+        {videoText.length === 0 ? 'Choose a Video Source' :  videoText}
+      </button>
     </div>
   );
 }

@@ -219,10 +219,10 @@ const App = () => {
       <Form onSubmit={createRecording} buttonText={videoText} getSources={getVideoSources} chooseDirectory={onDo} directory={location} />
 
       {console.log({ recordings })}
-      {/* 
+
       <div>
         <History recordings={recordings} deleteRecording={deleteRecording} />
-      </div> */}
+      </div>
       <div>
         <h2 className="mt-2">Recording Preview</h2>
         <Video autoPlay srcObject={streamer} width="80%" class="mb-5" />
